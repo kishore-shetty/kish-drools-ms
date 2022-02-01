@@ -1,0 +1,41 @@
+import com.kish.profile.request.ProfileRequest;
+import com.kish.profile.request.PhoneNumberRequest;
+import java.util.Map;
+
+dialect "mvel"
+
+rule "Default name to Kishore"
+    when
+        $profileRequest:ProfileRequest(name == null);
+        $defaultMap:Map();
+    then
+      	$profileRequest.setName("Kishore");
+        $defaultMap.put("name", "Name is defaulted");
+end
+
+rule "Default email to kish0387@gmail.com"
+    when
+        $profileRequest:ProfileRequest(email == null);
+        $defaultMap:Map();
+    then
+      	$profileRequest.setEmail("kish0387@gmail.com");
+      	$defaultMap.put("email", "email is defaulted");
+end
+
+rule "Default currency type to Euro"
+    when
+        $profileRequest:ProfileRequest(salary.currencyType == null);
+        $defaultMap:Map();
+    then
+      	$profileRequest.getSalary().setCurrencyType("EURO");
+      	$defaultMap.put("currencyType", "currencyType is defaulted");
+end
+
+rule "Default phone number to 99999999"
+    when
+        $profileRequest:ProfileRequest($phoneNumberRequests:phoneNumbers);
+        $phoneNumberRequest:PhoneNumberRequest(number != null) from $phoneNumberRequests;
+        $defaultMap:Map();
+    then
+        $phoneNumberRequest.setNumber("99999999");
+end
